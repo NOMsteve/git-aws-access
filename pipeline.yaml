@@ -4,17 +4,18 @@ Parameters:
   GitHubOwner:
     Type: String
     AllowedPattern: '[A-Za-z0-9-]+'
-    Default: quick-refs
+    Default: NOMsteve
   GitHubRepository:
     Type: String
     AllowedPattern: '[A-Za-z0-9-]+'
+    Default: git-aws-access
   GitHubBranch:
     Type: String
     AllowedPattern: '[A-Za-z0-9-]+'
     Default: master
   CodeBuildEnvironmentImage:
     Type: String
-    Default: 'aws/codebuild/standard:4.0'
+    Default: 'aws/codebuild/standard:5.0'
 Resources:
   CodeBuildServiceRole:
     Type: 'AWS::IAM::Role'
@@ -65,7 +66,7 @@ Resources:
       AuthType: PERSONAL_ACCESS_TOKEN
       ServerType: GITHUB
       Token: >-
-        {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}
+        {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:git_access11}}
   CodeBuilProject:
     Type: 'AWS::CodeBuild::Project'
     Properties:
@@ -217,7 +218,7 @@ Resources:
       Authentication: GITHUB_HMAC
       AuthenticationConfiguration:
         SecretToken: >-
-          {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}
+          {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:git_access11}}
       RegisterWithThirdParty: 'true'
       Filters:
         - JsonPath: $.ref
@@ -254,7 +255,7 @@ Resources:
                 Branch: !Ref GitHubBranch
                 PollForSourceChanges: false
                 OAuthToken: >-
-                  {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:GITHUB_ACCESS_TOKEN}}
+                  {{resolve:secretsmanager:GITHUB_ACCESS:SecretString:git_access11}}
               OutputArtifacts:
                 - Name: SourceCode
         - Name: Build
